@@ -29,93 +29,111 @@ class ManViewModel : ViewModel() {
                 numero = 0
                 typeCrypto = CriptoAes()
             }
-            R.id.rb_encrypt_aescbc -> {
-                numero = 1
-                typeCrypto = CriptoAESCBC()
-            }
-            R.id.rb_encrypt_file -> {
-                numero = 2
-                typeCrypto = CriptoFile()
-            }
             R.id.rb_encrypt_rsa -> {
-                numero = 3
+                numero = 1
                 typeCrypto = CriptoRsa()
             }
+
+            R.id.rb_encrypt_aescbc -> {
+                numero = 3
+                typeCrypto = CriptoAESCBC()
+            }
+
+
         }
     }
 
     val textResult = MutableLiveData<String>()
 
     val errorMessage = MutableLiveData<String>()
-    fun onClickListenerEncrypt(){
-        when(numero){
-            0 -> {
-                if(user.isNotEmpty() && pass.isNotEmpty()){
-                    val response = typeCrypto.encrypt(user,pass)
-                    textResult.value = response
-                }else{
-                    errorMessage.value = "El protocolo AES necesita de usuario y contraseña"
-                }
-            }
-            1 -> {
-                if(user.isNotEmpty() && pass.isNotEmpty()){
-                    val response = typeCrypto.encrypt(user,pass)
-                    textResult.value = response
-                }else{
-                    errorMessage.value = "El protocolo AESCBC necesita de usuario y contraseña"
-                }
-            }
-            2 -> {
-                if( user.isNotEmpty()){
-                    try{
-                        typeCrypto.createFileEncrypt(user, File(App.getContextApp().filesDir, "crypto/text.txt"))
-                        textResult.value = "Creado exitosamente"
-                    }catch (e:Exception){
-                        errorMessage.value = "Sucedio un error -> ${e.message}"
+    fun onClickListenerEncrypt() {
+        try {
+            when (numero) {
+                0 -> {
+                    if (user.isNotEmpty() && pass.isNotEmpty()) {
+                        val response = typeCrypto.encrypt(user, pass)
+                        textResult.value = response
+                    } else {
+                        errorMessage.value = "El protocolo AES necesita de usuario y contraseña"
                     }
-                }else{
-                    errorMessage.value = "No se puede guardar archivos"
+                }
+                1 -> {
+
+                }
+                2 -> {
+                    if (user.isNotEmpty()) {
+                        try {
+                            typeCrypto.createFileEncrypt(
+                                user,
+                                File(App.getContextApp().filesDir, "crypto/text.txt")
+                            )
+                            textResult.value = "Creado exitosamente"
+                        } catch (e: Exception) {
+                            errorMessage.value = "Sucedio un error -> ${e.message}"
+                        }
+                    } else {
+                        errorMessage.value = "No se puede guardar archivos"
+                    }
+                }
+                3 -> {
+                    if (user.isNotEmpty() && pass.isNotEmpty()) {
+                        val response = typeCrypto.encrypt(user, pass)
+                        textResult.value = response
+                    } else {
+                        errorMessage.value = "El protocolo AESDBC necesita de usuario y contraseña"
+                    }
                 }
             }
-            3 -> {
-
-            }
+        } catch (e: Exception) {
+            errorMessage.value = "error -> ${e.message}"
         }
     }
-    fun onClickListenerDeEncrypt(){
-        when(numero){
-            0 -> {
-                if((textResult.value ?: "").isNotEmpty() && pass.isNotEmpty()){
-                   val response= typeCrypto.deEncrypt(user,pass)
-                    textResult.value = response
-                }else{
-                    errorMessage.value = "El protocolo AES necesita la encriptacion y la contraseña"
-                }
-            }
-            1 -> {
-                if((textResult.value ?: "").isNotEmpty() && pass.isNotEmpty()){
-                    val response=  typeCrypto.deEncrypt(user,pass)
-                    textResult.value = response
-                }else{
-                    errorMessage.value = "El protocolo AESCBC necesita la encriptacion y la contraseña"
-                }
-            }
-            2 -> {
-                if( user.isNotEmpty()){
-                    try{
-                        val response= typeCrypto.readFileEncrypt( File(App.getContextApp().filesDir, "crypto/text.txt"))
+
+    fun onClickListenerDeEncrypt() {
+        try {
+
+            when (numero) {
+                0 -> {
+                    if ((textResult.value ?: "").isNotEmpty() && pass.isNotEmpty()) {
+                        val response = typeCrypto.deEncrypt(user, pass)
                         textResult.value = response
-                    }catch (e:Exception){
-                        errorMessage.value = "Sucedio un error -> ${e.message}"
+                    } else {
+                        errorMessage.value =
+                            "El protocolo AES necesita la encriptacion y la contraseña"
                     }
-                }else{
-                    errorMessage.value = "No se puede guardar archivos"
+                }
+                1 -> {
+
+                }
+                2 -> {
+                    if (user.isNotEmpty()) {
+                        try {
+                            val response = typeCrypto.readFileEncrypt(
+                                File(
+                                    App.getContextApp().filesDir,
+                                    "crypto/text.txt"
+                                )
+                            )
+                            textResult.value = response
+                        } catch (e: Exception) {
+                            errorMessage.value = "Sucedio un error -> ${e.message}"
+                        }
+                    } else {
+                        errorMessage.value = "No se puede guardar archivos"
+                    }
+                }
+                3 -> {
+                    if ((textResult.value ?: "").isNotEmpty() && pass.isNotEmpty()) {
+                        val response = typeCrypto.deEncrypt(user, pass)
+                        textResult.value = response
+                    } else {
+                        errorMessage.value =
+                            "El protocolo AESCBC necesita la encriptacion y la contraseña"
+                    }
                 }
             }
-            3 -> {
-                numero = 3
-                typeCrypto = CriptoRsa()
-            }
+        } catch (e: Exception) {
+            errorMessage.value = "error -> ${e.message}"
         }
     }
 

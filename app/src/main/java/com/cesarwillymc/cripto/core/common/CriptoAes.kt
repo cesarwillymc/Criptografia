@@ -10,7 +10,7 @@ class CriptoAes : Criptografia() {
         val cipher = Cipher.getInstance(aesConst)
         cipher.init(Cipher.DECRYPT_MODE, secretKey)
         val dataEncryptedByte = cipher.doFinal(word.toByteArray())
-        return String(dataEncryptedByte)
+        return Base64.encodeToString(dataEncryptedByte, Base64.DEFAULT)
     }
 
     override fun deEncrypt(wordEncrypt: String, password: String): String {

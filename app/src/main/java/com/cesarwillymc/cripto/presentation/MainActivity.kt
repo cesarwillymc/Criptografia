@@ -2,6 +2,7 @@ package com.cesarwillymc.cripto.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -19,6 +20,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.errorMessage.observe(this){
             it?.let {
+                Log.e("data", it)
                 Toast.makeText(this,it,Toast.LENGTH_LONG).show()
             }
         }
