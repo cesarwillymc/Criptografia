@@ -8,4 +8,7 @@
     <string name="button_realizar">Encriptar</string>
     <string name="rb_aes">AES</string>
     <string name="rb_rsc">RSA</string>
+    <string name="rb_file">File</string>
+    <string name="rb_aes_sbc">AES SBC</string>
+    <string name="text_deEncrypt">Desencriptar</string>
 </resources>

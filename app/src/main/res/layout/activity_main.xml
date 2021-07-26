@@ -3,7 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-
+    <data >
+        <variable
+            name="viewModel"
+            type="com.cesarwillymc.cripto.presentation.ManViewModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/txt_result"
@@ -29,6 +33,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
             android:ems="10"
+            android:onTextChanged="@{(word,b,c,d)->viewModel.updateTextUser(word)}"
             android:hint="@string/hint_user"
             android:inputType="textPersonName"
             android:minHeight="48dp"
@@ -56,6 +61,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
             android:ems="10"
+            android:onTextChanged="@{(word,b,c,d)->viewModel.updateTextPass(word)}"
             android:hint="@string/hint_password_data"
             android:inputType="textPassword"
             android:minHeight="48dp"
@@ -69,6 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
+            android:onCheckedChanged="@{viewModel.onSplitTypeChanged}"
             android:layout_marginEnd="32dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
@@ -86,6 +93,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/rb_rsc" />
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/rb_encrypt_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rb_file" />
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/rb_encrypt_aescbc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rb_aes_sbc" />
         </RadioGroup>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -106,6 +123,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:text="@string/button_realizar"
+            android:onClick="@{()->viewModel.onClickListenerEncrypt()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rg_type_encript" />
@@ -114,6 +132,7 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{viewModel.textResult}"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -124,7 +143,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Desencriptar"
+            android:text="@string/text_deEncrypt"
+            android:onClick="@{()->viewModel.onClickListenerDeEncrypt()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_encript" />

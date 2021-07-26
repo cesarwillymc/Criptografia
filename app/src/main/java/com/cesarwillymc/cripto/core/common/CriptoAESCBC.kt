@@ -1,7 +1,6 @@
 package com.cesarwillymc.cripto.core.common
 
-import android.util.Base64
-import java.security.Key
+
 import javax.crypto.Cipher
 
 class CriptoAESCBC:Criptografia() {
