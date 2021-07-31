@@ -17,7 +17,7 @@ open class Criptografia {
 
     protected val optionRSA = "RSA/ECB/OAEPWithSHA1AndMGF1Padding"
 
-    private val cryptoBytes = 2048
+    private val cryptoBytes = 1024
 
     open fun encrypt(word: String, typeKey: Key): String = ""
 
@@ -37,14 +37,14 @@ open class Criptografia {
         key = sha.digest(key)
         return SecretKeySpec(key, aesConst)
     }
-
-    protected fun generateKey(): SecretKey? {
+    lateinit var keyYen:SecretKey
+     fun generateKey(){
         val keygen = KeyGenerator.getInstance(aesConst)
         keygen.init(256)
-        return keygen.generateKey()
+         keyYen= keygen.generateKey()
     }
 
-    protected fun generateKeyPair(): Crypto {
+    fun generateKeyPair(): Crypto {
         val kpg = KeyPairGenerator.getInstance(rscConst)
         kpg.initialize(cryptoBytes)
         val kp = kpg.generateKeyPair()

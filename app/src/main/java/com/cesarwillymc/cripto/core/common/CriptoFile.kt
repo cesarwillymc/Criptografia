@@ -11,8 +11,6 @@ class CriptoFile : Criptografia() {
     override fun readFileEncrypt(file: File): String {
         if(!file.exists()){
             file.mkdirs()
-            file.createNewFile()
-
         }
         val mainKey = MasterKey.Builder(App.getContextApp())
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
@@ -41,6 +39,7 @@ class CriptoFile : Criptografia() {
         if(!file.exists()){
             file.mkdirs()
         }else{
+            newFile.delete()
         }
 
         val mainKey = MasterKey.Builder(App.getContextApp())

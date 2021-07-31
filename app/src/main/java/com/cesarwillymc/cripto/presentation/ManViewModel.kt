@@ -40,16 +40,14 @@ class ManViewModel : ViewModel() {
                 typeCrypto = CriptoFile()
             }
 
-            R.id.rb_encrypt_aescbc -> {
-                numero = 3
-                typeCrypto = CriptoAESCBC()
-            }
+
 
 
         }
     }
 
     val textResult = MutableLiveData<String>()
+    var llave: Crypto? = null
 
     val errorMessage = MutableLiveData<String>()
     fun onClickListenerEncrypt() {
@@ -64,7 +62,13 @@ class ManViewModel : ViewModel() {
                     }
                 }
                 1 -> {
-
+                    if (user.isNotEmpty()) {
+                        llave = typeCrypto.generateKeyPair()
+                        val response = typeCrypto.encrypt(user, llave!!.publicKey)
+                        textResult.value = response
+                    } else {
+                        errorMessage.value = "El protocolo RSA necesita de usuario"
+                    }
                 }
                 2 -> {
                     if (user.isNotEmpty()) {
@@ -82,12 +86,7 @@ class ManViewModel : ViewModel() {
                     }
                 }
                 3 -> {
-                    if (user.isNotEmpty() && pass.isNotEmpty()) {
-                        val response = typeCrypto.encrypt(user, pass)
-                        textResult.value = response
-                    } else {
-                        errorMessage.value = "El protocolo AESDBC necesita de usuario y contraseña"
-                    }
+
                 }
             }
         } catch (e: Exception) {
@@ -101,7 +100,7 @@ class ManViewModel : ViewModel() {
             when (numero) {
                 0 -> {
                     if ((textResult.value ?: "").isNotEmpty() && pass.isNotEmpty()) {
-                        val response = typeCrypto.deEncrypt(user, pass)
+                        val response = typeCrypto.deEncrypt(textResult.value ?: "", pass)
                         textResult.value = response
                     } else {
                         errorMessage.value =
@@ -109,6 +108,14 @@ class ManViewModel : ViewModel() {
                     }
                 }
                 1 -> {
+                    if (llave != null) {
+
+                        val response =
+                            typeCrypto.deEncrypt(textResult.value ?: "", llave!!.privateKey)
+                        textResult.value = response
+                    } else {
+                        errorMessage.value = "El protocolo RSA necesita que encryptes algo "
+                    }
 
                 }
                 2 -> {
@@ -129,13 +136,7 @@ class ManViewModel : ViewModel() {
                     }
                 }
                 3 -> {
-                    if ((textResult.value ?: "").isNotEmpty() && pass.isNotEmpty()) {
-                        val response = typeCrypto.deEncrypt(user, pass)
-                        textResult.value = response
-                    } else {
-                        errorMessage.value =
-                            "El protocolo AESCBC necesita la encriptacion y la contraseña"
-                    }
+
                 }
             }
         } catch (e: Exception) {
