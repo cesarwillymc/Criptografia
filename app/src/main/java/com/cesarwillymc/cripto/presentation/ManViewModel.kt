@@ -1,5 +1,6 @@
 package com.cesarwillymc.cripto.presentation
 
+import android.os.Environment
 import android.widget.RadioGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -34,6 +35,11 @@ class ManViewModel : ViewModel() {
                 typeCrypto = CriptoRsa()
             }
 
+            R.id.rb_encrypt_file -> {
+                numero = 2
+                typeCrypto = CriptoFile()
+            }
+
             R.id.rb_encrypt_aescbc -> {
                 numero = 3
                 typeCrypto = CriptoAESCBC()
@@ -65,7 +71,7 @@ class ManViewModel : ViewModel() {
                         try {
                             typeCrypto.createFileEncrypt(
                                 user,
-                                File(App.getContextApp().filesDir, "crypto/text.txt")
+                                File(Environment.getExternalStorageDirectory().path, "crytoTest")
                             )
                             textResult.value = "Creado exitosamente"
                         } catch (e: Exception) {
@@ -110,8 +116,8 @@ class ManViewModel : ViewModel() {
                         try {
                             val response = typeCrypto.readFileEncrypt(
                                 File(
-                                    App.getContextApp().filesDir,
-                                    "crypto/text.txt"
+                                    Environment.getExternalStorageDirectory().path,
+                                    "crytoTest"
                                 )
                             )
                             textResult.value = response

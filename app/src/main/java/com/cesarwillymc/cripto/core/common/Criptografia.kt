@@ -39,7 +39,7 @@ open class Criptografia {
     }
 
     protected fun generateKey(): SecretKey? {
-        val keygen = KeyGenerator.getInstance("AES")
+        val keygen = KeyGenerator.getInstance(aesConst)
         keygen.init(256)
         return keygen.generateKey()
     }

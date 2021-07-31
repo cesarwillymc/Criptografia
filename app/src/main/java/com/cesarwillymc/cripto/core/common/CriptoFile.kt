@@ -9,6 +9,11 @@ import java.nio.charset.StandardCharsets
 
 class CriptoFile : Criptografia() {
     override fun readFileEncrypt(file: File): String {
+        if(!file.exists()){
+            file.mkdirs()
+            file.createNewFile()
+
+        }
         val mainKey = MasterKey.Builder(App.getContextApp())
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
             .build()
@@ -32,13 +37,19 @@ class CriptoFile : Criptografia() {
     }
 
     override fun createFileEncrypt(text: String, file: File) {
+        val newFile=File(file.path,"encrypTest.txt")
+        if(!file.exists()){
+            file.mkdirs()
+        }else{
+        }
+
         val mainKey = MasterKey.Builder(App.getContextApp())
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
             .build()
 
         val encryptedFile = EncryptedFile.Builder(
             App.getContextApp(),
-            file,
+            newFile,
             mainKey,
             EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
         ).build()
