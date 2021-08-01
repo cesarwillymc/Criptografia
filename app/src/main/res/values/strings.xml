@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Criptografia</string>
+    <string name="hint_user">cesarwilly.mc@gmail.com</string>
+    <string name="hint_pass">Ingresar contraseña</string>
+    <string name="hint_password_data">**************</string>
+    <string name="hint_text_user">Ingresar usuario</string>
+    <string name="hint_format">Formato:</string>
+    <string name="button_realizar">Encriptar</string>
+    <string name="rb_aes">AES</string>
+    <string name="rb_rsc">RSA</string>
+    <string name="rb_file">File</string>
+    <string name="rb_aes_sbc">AES SBC</string>
+    <string name="text_deEncrypt">Desencriptar</string>
+    <string name="text_file_title">Texto a encriptar</string>
+    <string name="text_title_hint">Anita lavo la tina</string>
+    <string name="text_file_encrypt">Encryptar datos en archivo</string>
+    <string name="text_file_deencrypt">Leer Archivo</string>
 </resources>
