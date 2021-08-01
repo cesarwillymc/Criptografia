@@ -8,13 +8,9 @@ class CriptoAes : Criptografia() {
 
     override fun encrypt(word: String, password: String): String {
         val secretKey = generateKey(password)
-        Log.e("data","entro $secretKey")
         val cipher = Cipher.getInstance(aesConst)
-
         cipher.init(Cipher.ENCRYPT_MODE, secretKey)
-
         val dataEncryptedByte = cipher.doFinal(word.toByteArray())
-
         return Base64.encodeToString(dataEncryptedByte, Base64.DEFAULT)
     }
 
