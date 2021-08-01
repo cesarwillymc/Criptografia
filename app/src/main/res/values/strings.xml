@@ -11,4 +11,8 @@
     <string name="rb_file">File</string>
     <string name="rb_aes_sbc">AES SBC</string>
     <string name="text_deEncrypt">Desencriptar</string>
+    <string name="text_file_title">Texto a encriptar</string>
+    <string name="text_title_hint">Anita lavo la tina</string>
+    <string name="text_file_encrypt">Encryptar datos en archivo</string>
+    <string name="text_file_deencrypt">Leer Archivo</string>
 </resources>

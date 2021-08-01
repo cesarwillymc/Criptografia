@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -25,7 +26,12 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+            buildConfigField("String","NAME_FILE", "\"encryptdata.txt\"")
+            buildConfigField("String","SHARED_PREFERENCE_NAME", "\"cesar_shared\"")
+        }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8

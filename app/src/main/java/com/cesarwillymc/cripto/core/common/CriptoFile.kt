@@ -2,6 +2,7 @@ package com.cesarwillymc.cripto.core.common
 
 import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.MasterKey
+import com.cesarwillymc.cripto.BuildConfig
 import com.cesarwillymc.cripto.app.App
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -9,6 +10,7 @@ import java.nio.charset.StandardCharsets
 
 class CriptoFile : Criptografia() {
     override fun readFileEncrypt(file: File): String {
+        val newFile=File(file.path,BuildConfig.NAME_FILE)
         if(!file.exists()){
             file.mkdirs()
         }
@@ -17,7 +19,7 @@ class CriptoFile : Criptografia() {
             .build()
         val encryptedFile = EncryptedFile.Builder(
             App.getContextApp(),
-            file,
+            newFile,
             mainKey,
             EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
         ).build()
@@ -35,7 +37,7 @@ class CriptoFile : Criptografia() {
     }
 
     override fun createFileEncrypt(text: String, file: File) {
-        val newFile=File(file.path,"encrypTest.txt")
+        val newFile=File(file.path,BuildConfig.NAME_FILE)
         if(!file.exists()){
             file.mkdirs()
         }else{

@@ -5,6 +5,9 @@
       <map>
         <entry key="..\:/Proyects/Criptografia/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Proyects/Criptografia/app/src/main/res/layout/expample.xml" value="0.2490740740740741" />
+        <entry key="..\:/Proyects/Criptografia/app/src/main/res/layout/layout_encrypt_aes.xml" value="0.25416666666666665" />
+        <entry key="..\:/Proyects/Criptografia/app/src/main/res/layout/layout_encrypt_file.xml" value="0.25416666666666665" />
+        <entry key="..\:/Proyects/Criptografia/app/src/main/res/layout/layout_encrypt_rsa.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

@@ -7,11 +7,13 @@ import androidx.lifecycle.ViewModel
 import com.cesarwillymc.cripto.R
 import com.cesarwillymc.cripto.app.App
 import com.cesarwillymc.cripto.core.common.*
+import com.cesarwillymc.cripto.core.repo.SharedPreferences
 import java.io.File
 
 
 class ManViewModel : ViewModel() {
 
+    val typeState = MutableLiveData<MainViewModelState>()
     private var user = ""
     private var pass = ""
     fun updateTextUser(word: CharSequence) {
@@ -23,26 +25,23 @@ class ManViewModel : ViewModel() {
     }
 
     private var typeCrypto: Criptografia = CriptoAes()
-    private var numero = 0
+
     fun onSplitTypeChanged(radioGroup: RadioGroup?, id: Int) {
+        textResult.value=""
         when (id) {
             R.id.rb_encrypt_aes -> {
-                numero = 0
+                typeState.value = MainViewModelState.AES
                 typeCrypto = CriptoAes()
             }
             R.id.rb_encrypt_rsa -> {
-                numero = 1
+                typeState.value = MainViewModelState.RSA
                 typeCrypto = CriptoRsa()
             }
 
             R.id.rb_encrypt_file -> {
-                numero = 2
+                typeState.value = MainViewModelState.FILEEncrypt
                 typeCrypto = CriptoFile()
             }
-
-
-
-
         }
     }
 
@@ -50,43 +49,25 @@ class ManViewModel : ViewModel() {
     var llave: Crypto? = null
 
     val errorMessage = MutableLiveData<String>()
-    fun onClickListenerEncrypt() {
-        try {
-            when (numero) {
-                0 -> {
-                    if (user.isNotEmpty() && pass.isNotEmpty()) {
-                        val response = typeCrypto.encrypt(user, pass)
-                        textResult.value = response
-                    } else {
-                        errorMessage.value = "El protocolo AES necesita de usuario y contraseña"
-                    }
-                }
-                1 -> {
-                    if (user.isNotEmpty()) {
-                        llave = typeCrypto.generateKeyPair()
-                        val response = typeCrypto.encrypt(user, llave!!.publicKey)
-                        textResult.value = response
-                    } else {
-                        errorMessage.value = "El protocolo RSA necesita de usuario"
-                    }
-                }
-                2 -> {
-                    if (user.isNotEmpty()) {
-                        try {
-                            typeCrypto.createFileEncrypt(
-                                user,
-                                File(Environment.getExternalStorageDirectory().path, "crytoTest")
-                            )
-                            textResult.value = "Creado exitosamente"
-                        } catch (e: Exception) {
-                            errorMessage.value = "Sucedio un error -> ${e.message}"
-                        }
-                    } else {
-                        errorMessage.value = "No se puede guardar archivos"
-                    }
-                }
-                3 -> {
 
+    fun onClickRSA(encrypt: Boolean) {
+        try {
+            if (encrypt) {
+                if (user.isNotEmpty()) {
+                    llave = typeCrypto.generateKeyPair()
+                    val response = typeCrypto.encrypt(user, llave!!.publicKey)
+                    textResult.value = response
+                } else {
+                    errorMessage.value = "El protocolo RSA necesita de usuario"
+                }
+            } else {
+                if (llave != null) {
+
+                    val response =
+                        typeCrypto.deEncrypt(textResult.value ?: "", llave!!.privateKey)
+                    textResult.value = response
+                } else {
+                    errorMessage.value = "El protocolo RSA necesita que encryptes algo "
                 }
             }
         } catch (e: Exception) {
@@ -94,54 +75,71 @@ class ManViewModel : ViewModel() {
         }
     }
 
-    fun onClickListenerDeEncrypt() {
+    private val aesConst = "sharedAES"
+    private val fileConst = "sharedFILE"
+    fun onClickAES(encrypt: Boolean) {
+        try {
+            if (encrypt) {
+                if (user.isNotEmpty() && pass.isNotEmpty()) {
+                    val response = typeCrypto.encrypt(user, pass)
+                    SharedPreferences.init().edit().putString(aesConst, response).apply()
+                    textResult.value = response
+                } else {
+                    errorMessage.value = "El protocolo AES necesita de usuario y contraseña"
+                }
+            } else {
+                if ((textResult.value ?: "").isNotEmpty() && pass.isNotEmpty()) {
+                    val response = typeCrypto.deEncrypt(
+                        SharedPreferences.init().getString(aesConst, "") ?: "",
+                        pass
+                    )
+                    textResult.value = response
+                } else {
+                    errorMessage.value =
+                        "El protocolo AES necesita la encriptacion y la contraseña"
+                }
+            }
+
+        } catch (e: Exception) {
+            errorMessage.value = "error -> ${e.message}"
+        }
+    }
+
+    fun onClickFILE(encrypt: Boolean) {
         try {
 
-            when (numero) {
-                0 -> {
-                    if ((textResult.value ?: "").isNotEmpty() && pass.isNotEmpty()) {
-                        val response = typeCrypto.deEncrypt(textResult.value ?: "", pass)
+            if (encrypt) {
+                val rutaFile = File(Environment.getExternalStorageDirectory().path, "crytoTest")
+                if (user.isNotEmpty()) {
+                    try {
+                        typeCrypto.createFileEncrypt(
+                            user,
+                            rutaFile
+                        )
+                        SharedPreferences.init().edit().putString(fileConst, rutaFile.path).apply()
+                        textResult.value = "Creado exitosamente"
+                    } catch (e: Exception) {
+                        errorMessage.value = "Sucedio un error -> ${e.message}"
+                    }
+                } else {
+                    errorMessage.value = "No se puede guardar archivos"
+                }
+            } else {
+                if (user.isNotEmpty()) {
+                    try {
+                        val response = typeCrypto.readFileEncrypt(
+                            File(SharedPreferences.init().getString(fileConst, "") ?: "")
+                        )
                         textResult.value = response
-                    } else {
-                        errorMessage.value =
-                            "El protocolo AES necesita la encriptacion y la contraseña"
+                    } catch (e: Exception) {
+                        errorMessage.value = "Sucedio un error -> ${e.message}"
                     }
-                }
-                1 -> {
-                    if (llave != null) {
-
-                        val response =
-                            typeCrypto.deEncrypt(textResult.value ?: "", llave!!.privateKey)
-                        textResult.value = response
-                    } else {
-                        errorMessage.value = "El protocolo RSA necesita que encryptes algo "
-                    }
-
-                }
-                2 -> {
-                    if (user.isNotEmpty()) {
-                        try {
-                            val response = typeCrypto.readFileEncrypt(
-                                File(
-                                    Environment.getExternalStorageDirectory().path,
-                                    "crytoTest"
-                                )
-                            )
-                            textResult.value = response
-                        } catch (e: Exception) {
-                            errorMessage.value = "Sucedio un error -> ${e.message}"
-                        }
-                    } else {
-                        errorMessage.value = "No se puede guardar archivos"
-                    }
-                }
-                3 -> {
-
+                } else {
+                    errorMessage.value = "No se puede guardar archivos"
                 }
             }
         } catch (e: Exception) {
             errorMessage.value = "error -> ${e.message}"
         }
     }
-
 }
