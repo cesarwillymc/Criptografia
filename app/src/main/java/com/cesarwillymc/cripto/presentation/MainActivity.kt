@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.cesarwillymc.cripto.R
+import com.cesarwillymc.cripto.core.binding.hideKeyboard
 import com.cesarwillymc.cripto.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -23,6 +24,9 @@ class MainActivity : AppCompatActivity() {
                 Log.e("data", it)
                 Toast.makeText(this,it,Toast.LENGTH_LONG).show()
             }
+        }
+        viewModel.onClick = {
+            hideKeyboard()
         }
     }
 }

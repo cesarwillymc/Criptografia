@@ -12,7 +12,7 @@ import java.io.File
 
 
 class ManViewModel : ViewModel() {
-
+    lateinit var onClick: () -> Unit
     val typeState = MutableLiveData<MainViewModelState>()
     private var user = ""
     private var pass = ""
@@ -27,7 +27,7 @@ class ManViewModel : ViewModel() {
     private var typeCrypto: Criptografia = CriptoAes()
 
     fun onSplitTypeChanged(radioGroup: RadioGroup?, id: Int) {
-        textResult.value=""
+        textResult.value = ""
         when (id) {
             R.id.rb_encrypt_aes -> {
                 typeState.value = MainViewModelState.AES
@@ -51,6 +51,7 @@ class ManViewModel : ViewModel() {
     val errorMessage = MutableLiveData<String>()
 
     fun onClickRSA(encrypt: Boolean) {
+        onClick.invoke()
         try {
             if (encrypt) {
                 if (user.isNotEmpty()) {
@@ -78,6 +79,7 @@ class ManViewModel : ViewModel() {
     private val aesConst = "sharedAES"
     private val fileConst = "sharedFILE"
     fun onClickAES(encrypt: Boolean) {
+        onClick.invoke()
         try {
             if (encrypt) {
                 if (user.isNotEmpty() && pass.isNotEmpty()) {
@@ -106,6 +108,7 @@ class ManViewModel : ViewModel() {
     }
 
     fun onClickFILE(encrypt: Boolean) {
+        onClick.invoke()
         try {
 
             if (encrypt) {
